@@ -17,40 +17,36 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX) - 希望你能带我走</title>
+  <title>STM32-串口通讯/串口空闲中断/回调函数 - 希望你能带我走</title>
 
   
-    <meta name="description" content="摘要：本文介绍了STM32芯片GPIO的功能和原理，HAL库 GPIO函数，以及CubeMX工具的使用；">
+    <meta name="description" content="摘要：本文介绍了STM32芯片串口通信的功能和时序原理，基于HAL库的编码过程，如何使用回调函数，以及为了处理不定长数据如何使用串口空闲中断。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)">
-<meta property="og:url" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/index.html">
+<meta property="og:title" content="STM32-串口通讯&#x2F;串口空闲中断&#x2F;回调函数">
+<meta property="og:url" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/index.html">
 <meta property="og:site_name" content="希望你能带我走">
-<meta property="og:description" content="摘要：本文介绍了STM32芯片GPIO的功能和原理，HAL库 GPIO函数，以及CubeMX工具的使用；">
+<meta property="og:description" content="摘要：本文介绍了STM32芯片串口通信的功能和时序原理，基于HAL库的编码过程，如何使用回调函数，以及为了处理不定长数据如何使用串口空闲中断。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/blog/GPIO_01-1725463539954-10.jpg">
-<meta property="og:image" content="http://example.com/images/blog/GPIO_02-1725463619515-24.jpg">
-<meta property="og:image" content="http://example.com/images/blog/GPIO_04-1725463593207-19.jpg">
-<meta property="og:image" content="http://example.com/images/blog/GPIO_03-1725463595316-21.jpg">
-<meta property="og:image" content="http://example.com/images/blog/GPIO_05.jpg">
-<meta property="og:image" content="http://example.com/images/blog/GPIO_06-1725463578520-12.png">
-<meta property="og:image" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-10-07%20143006.png">
-<meta property="og:image" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/GPIO_08.png">
-<meta property="og:image" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/GPIO_07.png">
-<meta property="og:image" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/image-20241007144010487.png">
-<meta property="og:image" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/GPIO_09.png">
-<meta property="og:image" content="http://example.com/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/1728307810471-1728308550260-8.jpg">
-<meta property="article:published_time" content="2024-09-01T08:25:51.000Z">
-<meta property="article:modified_time" content="2024-10-25T17:41:31.680Z">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241218225325346.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219005100001.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219005449490.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219012710250.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219020604007.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219020531504.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219020804338.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219021015949.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219010838740.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219010946220.png">
+<meta property="og:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219011207540.png">
+<meta property="article:published_time" content="2024-12-11T18:01:56.000Z">
+<meta property="article:modified_time" content="2024-12-18T18:19:26.297Z">
 <meta property="article:author" content="kisekino yama">
-<meta property="article:tag" content="Keil">
-<meta property="article:tag" content="MDK-ARM">
-<meta property="article:tag" content="GPIO">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/blog/GPIO_01-1725463539954-10.jpg">
+<meta name="twitter:image" content="http://example.com/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241218225325346.png">
   
   
   
-  <meta name="keywords" content="Keil,MDK-ARM,GPIO">
+  
 
   <!-- feed -->
   
@@ -91,74 +87,98 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/">技术学习</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/">嵌入式开发</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/STM32/">STM32</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-09-01T08:25:51.000Z">2024-09-01</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-10-25T17:41:31.680Z">2024-10-26</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2024-12-11T18:01:56.000Z">2024-12-12</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2024-12-18T18:19:26.297Z">2024-12-19</time></span></div></div></div>
     
     <div class="bottom only-title">
       
       <div class="text-area">
-        <h1 class="text title"><span>STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)</span></h1>
+        <h1 class="text title"><span>STM32-串口通讯/串口空闲中断/回调函数</span></h1>
         
       </div>
     </div>
     
   </div>
-  </div><article class="md-text content"><p>摘要：本文介绍了STM32芯片GPIO的功能和原理，HAL库 GPIO函数，以及CubeMX工具的使用；</p>
+  </div><article class="md-text content"><p>摘要：本文介绍了STM32芯片串口通信的功能和时序原理，基于HAL库的编码过程，如何使用回调函数，以及为了处理不定长数据如何使用串口空闲中断。</p>
 <span id="more"></span>
 
 <h1 id="0-写在前面"><a href="#0-写在前面" class="headerlink" title="0. 写在前面"></a>0. 写在前面</h1><p>以下内容皆是基于笔者的嵌入式小白理解，部分语句并不够严谨，更多是为了自己和小白能够理解，如有错误敬请指正。</p>
 <p>部分软件的使用教程省略。</p>
-<h1 id="1-GPIO基本原理"><a href="#1-GPIO基本原理" class="headerlink" title="1. GPIO基本原理"></a>1. GPIO基本原理</h1><p>GPIO是STM32的基础功能，能够进行引脚高&#x2F;低电平是输入输出，通俗来说，就是可以通过编写程序来控制某个引脚是低电平还是高电平(此时引脚的电平控制权在芯片)；或者能够检测外部输入的信号的高电平还是低电平(此时引脚的电平控制权在外设)。</p>
-<p>例如，如果GPIO是输出模式，那么引脚接LED灯的正极，LED灯的负极接GND(电路中的地线，也就是电路图中的电源负极，电压为0V)，如果给出指令，让GPIO输出高电平(即置位)，那么灯泡就会亮；反之让GPIO输出低电平(即复位)，那么灯泡就会熄灭。</p>
-<h2 id="1-1-GPIO输出模式"><a href="#1-1-GPIO输出模式" class="headerlink" title="1.1 GPIO输出模式"></a>1.1 GPIO输出模式</h2><p>GPIO共有两种输出模式：推挽输出和开漏输出。</p>
-<h3 id="1-1-1-推挽输出"><a href="#1-1-1-推挽输出" class="headerlink" title="1.1.1 推挽输出"></a>1.1.1 推挽输出</h3><p>推挽（Push-Pull）输出原理如下图。输出值Q由内部总线传递，通过D触发器输出 <strong>非Q</strong>，然后连接两个MOS管。PMOS管连接高电平，NMOS连接低电平。Q&#x3D;0时，非Q&#x3D;1，NMOS导通，IO输出低电平；反之，Q&#x3D;1时，非Q&#x3D;0，PMOS导通，输出高电平。</p>
-<blockquote>
-<p>就是能推（Push）能拉（Pull）的意思。</p>
+<h1 id="1-串口通信简介"><a href="#1-串口通信简介" class="headerlink" title="1. 串口通信简介"></a>1. 串口通信简介</h1><blockquote>
+<p>前置知识：并行通信&#x2F;串行通信、全双工&#x2F;半双工&#x2F;单工通讯、同步通讯&#x2F;异步通讯的概念；波特率。</p>
 </blockquote>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/blog/GPIO_01-1725463539954-10.jpg" alt="GPIO_01"></p>
-<h3 id="1-1-2-开漏输出"><a href="#1-1-2-开漏输出" class="headerlink" title="1.1.2 开漏输出"></a>1.1.2 开漏输出</h3><p>开漏（Open-Drain）输出原理如下图。和推挽输出的区别在于PMOS管没了，当Q&#x3D;0时能够将电平拉低，但是Q&#x3D;1时不能拉高电平，只能输出高阻态。此时可以通过上拉电阻接到所需要的高电平(3.3V~5V)。</p>
-<p>另外，开漏输出有“线与”的特点，多个开漏输出电路连在一起时，一个电路输出低电平，所有电路都会被拉低。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/blog/GPIO_02-1725463619515-24.jpg" alt="GPIO_02"></p>
-<h2 id="1-2-GPIO输入模式"><a href="#1-2-GPIO输入模式" class="headerlink" title="1.2 GPIO输入模式"></a>1.2 GPIO输入模式</h2><p>输入模式主要分为三种：上拉输入和下拉输入还有浮空输入。</p>
-<p>原理如图所示，实际上就是通过一个上拉电阻和一个下拉电阻来控制没有输入时的电平状态。顾名思义，上拉输入就是接入上拉电阻，没有输入时为高电平，当输入低电平时，电路电平被拉低；下拉输入相反，接入下拉电阻，没有输入时为低电平，输入高电平时电路电平被拉高；浮空输入则是上拉&#x2F;下拉电阻都不接，电路电平完全取决于输入电平。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/blog/GPIO_04-1725463593207-19.jpg" alt="GPIO_04"></p>
-<p>例如下面三个开关，如果将这三个开关用于GPIO输入的话，PA0可以设置为浮空或者下拉输入，当按键被按下时，输入高电平。PB2~PB4可以设置为浮空或者上拉输入，当按键被按下时，输入低电平。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/blog/GPIO_03-1725463595316-21.jpg" alt="GPIO_03"></p>
-<p>整个GPIO模块的原理图如下。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/blog/GPIO_05.jpg" alt="GPIO_05"></p>
-<h1 id="2-使用GPIO工程"><a href="#2-使用GPIO工程" class="headerlink" title="2. 使用GPIO工程"></a>2. 使用GPIO工程</h1><p>以STM32C8T6为例。要实现的功能是：配置两个GPIO口，一个输入一个输出，输入检测按键是否被按下和弹开，输出给LED供电，以实现按钮开关LED灯。</p>
-<h2 id="2-1-新建CubeMX工程"><a href="#2-1-新建CubeMX工程" class="headerlink" title="2.1 新建CubeMX工程"></a>2.1 新建CubeMX工程</h2><p>CubeMx的功能是为STM32软件生成代码模板，能够在软件编辑好引脚配置，然后自动生成这些引脚的初始化代码，可以在代码模板中编写用户软件逻辑。</p>
-<p>File - New Project - 搜索F103C8T6 - 选择芯片。</p>
-<p>主界面如图所示。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/images/blog/GPIO_06-1725463578520-12.png" alt="GPIO_06"></p>
-<p>然后配置GPIO口。</p>
-<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/屏幕截图 2024-10-07 143006.png" alt="屏幕截图 2024-10-07 143006" style="zoom:33%;">
+<p>串口通讯(SerialCommunication) 是一种设备间非常常用的串行通讯方式，因为它简单便捷，因此大部分电子设备都支持该通讯方式，电子工程师在调试设备时也经常使用该通讯方式输出调试信息。</p>
+<h2 id="1-1-物理层"><a href="#1-1-物理层" class="headerlink" title="1.1 物理层"></a>1.1 物理层</h2><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241218225325346.png" alt="image-20241218225325346"></p>
+<p>控制器一般使用TTL电平标准，所以会使用电平转换芯片转换为串口通讯使用的RS-232标准，然后输出到串口接口中。</p>
+<table>
+<thead>
+<tr>
+<th>通讯标准</th>
+<th>电平标准（发送端）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5V TTL</td>
+<td>逻辑1：2.4V~5V</td>
+</tr>
+<tr>
+<td></td>
+<td>逻辑0：0V~0.5V</td>
+</tr>
+<tr>
+<td>RS-232</td>
+<td>逻辑1：-15V~-3V</td>
+</tr>
+<tr>
+<td></td>
+<td>逻辑0：+3V~+15V</td>
+</tr>
+</tbody></table>
+<p>旧式的台式计算机中一般会有RS-232标准的COM口（也称DB9接口），用于计算机、路由和调制解调器之间的连接。</p>
+<img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219005100001.png" alt="image-20241219005100001" style="zoom:33%;">
 
-<p>工程配置，Project选项栏中选择项目的保存地址和名称，笔者用的是MDK-ARM，用Keil软件编写C语言代码。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/GPIO_08.png" alt="GPIO_08"></p>
-<p>Code Generator选项栏中可以选择生成C语言头文件。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/GPIO_07.png" alt="GPIO_07"></p>
-<p>全部完成后点击右上角的GENERATE CODE，即可生成代码模板。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/image-20241007144010487.png" alt="image-20241007144010487"></p>
-<h2 id="2-2-使用Keil-uVision5编写代码"><a href="#2-2-使用Keil-uVision5编写代码" class="headerlink" title="2.2 使用Keil uVision5编写代码"></a>2.2 使用Keil uVision5编写代码</h2><p>如图，打开刚才生成的代码，能看到左侧的工程文件目录，生成的文件中含有<code>USER BEGIN</code> 和<code>USER END</code>字样的注释，在二者之间编写的用户代码在重新生成代码后不会被删除。</p>
-<p>这里在<code>main.c</code>文件中编写业务逻辑，在<code>while(1)</code>循环中。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/GPIO_09.png" alt="GPIO_09"></p>
-<p>最后烧录到开发板上，验证结果。</p>
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/1728307810471-1728308550260-8.jpg" alt="1728307810471"></p>
-<p>参考：</p>
+
+
+<h2 id="1-2-协议层"><a href="#1-2-协议层" class="headerlink" title="1.2 协议层"></a>1.2 协议层</h2><p>串口通讯的数据包从发送设备的TXD接口发送到接收设备的RDX接口。</p>
+<p>数据包（帧）内容：起始位，主题数据，校验位，停止位；同时双方需要选定相同的波特率（用于没有时钟信号的异步通信）。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219005449490.png" alt="image-20241219005449490"></p>
 <ol>
-<li>关于地线: <a target="_blank" rel="noopener" href="https://blog.csdn.net/wu_zhiyuan/article/details/134071796">笔记：电子设备接地，接的到底是什么地？</a></li>
+<li>起始位：一个逻辑0数据位</li>
+<li>数据位：有效数据，一般可选5~8位长。</li>
+<li>校验位：可选，有奇校验、偶校验、0&#x2F;1校验、无校验。</li>
 </ol>
-<h1 id="写在后面"><a href="#写在后面" class="headerlink" title="写在后面"></a>写在后面</h1><p>笔者并不是一个勤快的人。目前工作内容主要是嵌入式开发，会经常和部门的硬件同事打交道，但是笔者目前所有的知识只有本科计算机，由于没有微电子硬件相关的基础，所以对于工作过程中的一些电性问题基本处理不了，直到现在工作了五个多月，也就会用个万用表读读电压，然后看看板子的原理图，剩下的就只能求助同事了。</p>
-<p>下午打算学一点东西。今年计划考一次研试一试的，但是英语看了一会儿，实在背不下去，数学和专业课也还没复习。我不知道要从哪里开始学起，感觉要学的东西太多了，不管是考研还是工作，我现在都还没有一个明确的学习计划，就这样拖到了下午四点半。在工作之后，个人时间几乎都是靠游戏过去的，像是逃避焦虑一样不去想学习的事情，一旦想起来就会重新陷入深深的焦虑中。</p>
-<p>于是抱着这样的心情写了这篇博客，至少解决工作上的问题对我现在而言是有益的，目前我对于STM32的开发还处于只会套库，原理一窍不通的阶段，所以我会尝试记录遇到的所有问题并弄清楚原理，发表于博客上。如果能坚持下来的话，我相信即使是我这样的人，也能有所进步的。</p>
-<p>数学公式搞起来麻烦，下次。</p>
-<p>电子电路相关的知识，如MOS管、上拉&#x2F;下拉电阻之类的知识，以后应该会写一些系统一点的博客吧，作学习整理之用。</p>
-<p>以上。</p>
-
+<h1 id="2-STM32芯片的USART简介"><a href="#2-STM32芯片的USART简介" class="headerlink" title="2. STM32芯片的USART简介"></a>2. STM32芯片的USART简介</h1><p>通用同步异步收发器(Universal Synchronous Asynchronous Receiver and Transmitter) 是一个串行通信设备，可以灵活地与外部设备进行全双工数据交换。通常用硬件设计中使用USART接口用来给电脑打印调试信息，类似于软件设计中的命令台打印。</p>
+<p>功能框图如下所示。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219012710250.png" alt="image-20241219012710250"></p>
+<p>很懵逼吗？至少我第一次看到的时候是很懵逼的。上面四个框中依次是：功能引脚，数据寄存器，控制器，波特率计算器。</p>
+<h2 id="2-1-功能引脚"><a href="#2-1-功能引脚" class="headerlink" title="2.1 功能引脚"></a>2.1 功能引脚</h2><p>Tx是发送引脚，Rx是接收引脚，在异步串口并使用软件控制的情况下，基本上只需要关注这两个接口就行了。</p>
+<h2 id="2-2-数据寄存器"><a href="#2-2-数据寄存器" class="headerlink" title="2.2 数据寄存器"></a>2.2 数据寄存器</h2><p>USART 的数据寄存器是USART_DR，由两个寄存器组成：发送寄存器（TDR）和接收寄存器（RDR）。接收数据的时候，数据的流动路径为：Rx传输线-&gt; 接收移位寄存器-&gt; RDR-&gt;数据总线(即读取接收到的数据)。Tx反之。</p>
+<h2 id="2-3-控制器"><a href="#2-3-控制器" class="headerlink" title="2.3 控制器"></a>2.3 控制器</h2><p>控制寄存器共有三个（USART_CR1-3）,分别控制中断、时钟、功能模式使能。其中比较重要的是中断控制寄存器，用来使能中断， 如下所示。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219020604007.png" alt="image-20241219020604007"></p>
+<h2 id="2-4-波特率计算-略"><a href="#2-4-波特率计算-略" class="headerlink" title="2.4 波特率计算(略)"></a>2.4 波特率计算(略)</h2><h2 id="2-5-状态寄存器和重要的几个中断位"><a href="#2-5-状态寄存器和重要的几个中断位" class="headerlink" title="2.5 状态寄存器和重要的几个中断位"></a>2.5 状态寄存器和重要的几个中断位</h2><p>状态寄存器是USART_SR，当串口进行某些操作（或者说进入某个状态）时，这些状态就会出现变化，大部分中断都要靠状态寄存器产生，了解这些状态对串口编程非常重要。实际编程中，重点是配置需要的中断使能，以及知道什么时候状态位会发生变化。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219020531504.png" alt="image-20241219020531504"></p>
+<p>USART_SR和USART_CR1的状态位联合决定了USART中断是否会产生，如下所示。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219020804338.png" alt="image-20241219020804338"></p>
+<p>中断请求表如下所示。(“TXNE”打印错误，应该位”RXNE”).</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219021015949.png" alt="image-20241219021015949"></p>
+<p>也就是说，当左边的事件产生时，事件标志就会置为1。而使能位是我们自己设置的，所以结合中断映像图，当某个事件的使能位和标志位同时置1时，中断就会产生。</p>
+<blockquote>
+<p>（重要）事件的标志置位1后需要重新复位才能进行下一次的中断响应。大部分情况HAL库的函数会包括复位步骤，而有时需要自己执行复位。</p>
+</blockquote>
+<h1 id="3-硬件配置"><a href="#3-硬件配置" class="headerlink" title="3. 硬件配置"></a>3. 硬件配置</h1><p>使用F103ZET6芯片开发板，内置USB转串口模块（CH430芯片+miniUSB接口）方便和电脑进行通信。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219010838740.png" alt="image-20241219010838740"></p>
+<h1 id="4-编码过程（CubeMx-HAL库编程）"><a href="#4-编码过程（CubeMx-HAL库编程）" class="headerlink" title="4. 编码过程（CubeMx+HAL库编程）"></a>4. 编码过程（CubeMx+HAL库编程）</h1><p>编码步骤如下。</p>
+<h2 id="4-1-配置USART外设"><a href="#4-1-配置USART外设" class="headerlink" title="4.1 配置USART外设"></a>4.1 配置USART外设</h2><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219010946220.png" alt="image-20241219010946220"></p>
+<p>如图所示，串口的配置很简单，模式选择异步，硬件控制选择否，配置从上往下依次是：波特率(115200bits&#x2F;s)，有效位长(8位，包括校验位)，校验位（无），停止位（1），数据方向（收发）。</p>
+<h2 id="4-2-配置USART中断"><a href="#4-2-配置USART中断" class="headerlink" title="4.2 配置USART中断"></a>4.2 配置USART中断</h2><p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/image-20241219011207540.png" alt="image-20241219011207540"></p>
+<p>左边的外设列表 - System Core - NVIC，USARTx global interrupt 开启。</p>
+<blockquote>
+<p>开启中断的目的主要是为了接收数据，类似于JAVA Springboot中写一个Controller接口来让程序知道，现在来了”访问”或者”数据”…</p>
+</blockquote>
+<h2 id="使用HAL库中的回调函数"><a href="#使用HAL库中的回调函数" class="headerlink" title="使用HAL库中的回调函数"></a>使用HAL库中的回调函数</h2><h3 id="和标准库的区别"><a href="#和标准库的区别" class="headerlink" title="和标准库的区别"></a>和标准库的区别</h3><h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><h2 id="自己编写空闲中断回调函数-严格来说并不算"><a href="#自己编写空闲中断回调函数-严格来说并不算" class="headerlink" title="自己编写空闲中断回调函数(严格来说并不算)"></a>自己编写空闲中断回调函数(严格来说并不算)</h2><h1 id="写在后面"><a href="#写在后面" class="headerlink" title="写在后面"></a>写在后面</h1>
 
 </article>
-<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/">STM32-串口通讯/串口空闲中断/回调函数</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/08/30/%E6%AC%A2%E8%BF%8E/">欢迎</a></div></section></div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/">STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)</a></div></section></div>
 
 
 
@@ -199,7 +219,7 @@ show_runtime();
 
 
 
-<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">0. 写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-GPIO%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-text">1. GPIO基本原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-GPIO%E8%BE%93%E5%87%BA%E6%A8%A1%E5%BC%8F"><span class="toc-text">1.1 GPIO输出模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-%E6%8E%A8%E6%8C%BD%E8%BE%93%E5%87%BA"><span class="toc-text">1.1.1 推挽输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA"><span class="toc-text">1.1.2 开漏输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-GPIO%E8%BE%93%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="toc-text">1.2 GPIO输入模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8GPIO%E5%B7%A5%E7%A8%8B"><span class="toc-text">2. 使用GPIO工程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E6%96%B0%E5%BB%BACubeMX%E5%B7%A5%E7%A8%8B"><span class="toc-text">2.1 新建CubeMX工程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E4%BD%BF%E7%94%A8Keil-uVision5%E7%BC%96%E5%86%99%E4%BB%A3%E7%A0%81"><span class="toc-text">2.2 使用Keil uVision5编写代码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%90%8E%E9%9D%A2"><span class="toc-text">写在后面</span></a></li></ol></div><div class="widget-footer">
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">0. 写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E7%AE%80%E4%BB%8B"><span class="toc-text">1. 串口通信简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E7%89%A9%E7%90%86%E5%B1%82"><span class="toc-text">1.1 物理层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%8D%8F%E8%AE%AE%E5%B1%82"><span class="toc-text">1.2 协议层</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-STM32%E8%8A%AF%E7%89%87%E7%9A%84USART%E7%AE%80%E4%BB%8B"><span class="toc-text">2. STM32芯片的USART简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%8A%9F%E8%83%BD%E5%BC%95%E8%84%9A"><span class="toc-text">2.1 功能引脚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E6%95%B0%E6%8D%AE%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">2.2 数据寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-text">2.3 控制器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E6%B3%A2%E7%89%B9%E7%8E%87%E8%AE%A1%E7%AE%97-%E7%95%A5"><span class="toc-text">2.4 波特率计算(略)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-%E7%8A%B6%E6%80%81%E5%AF%84%E5%AD%98%E5%99%A8%E5%92%8C%E9%87%8D%E8%A6%81%E7%9A%84%E5%87%A0%E4%B8%AA%E4%B8%AD%E6%96%AD%E4%BD%8D"><span class="toc-text">2.5 状态寄存器和重要的几个中断位</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%A1%AC%E4%BB%B6%E9%85%8D%E7%BD%AE"><span class="toc-text">3. 硬件配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E7%BC%96%E7%A0%81%E8%BF%87%E7%A8%8B%EF%BC%88CubeMx-HAL%E5%BA%93%E7%BC%96%E7%A8%8B%EF%BC%89"><span class="toc-text">4. 编码过程（CubeMx+HAL库编程）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E9%85%8D%E7%BD%AEUSART%E5%A4%96%E8%AE%BE"><span class="toc-text">4.1 配置USART外设</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E9%85%8D%E7%BD%AEUSART%E4%B8%AD%E6%96%AD"><span class="toc-text">4.2 配置USART中断</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8HAL%E5%BA%93%E4%B8%AD%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-text">使用HAL库中的回调函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%92%8C%E6%A0%87%E5%87%86%E5%BA%93%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">和标准库的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%B7%B1%E7%BC%96%E5%86%99%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0-%E4%B8%A5%E6%A0%BC%E6%9D%A5%E8%AF%B4%E5%B9%B6%E4%B8%8D%E7%AE%97"><span class="toc-text">自己编写空闲中断回调函数(严格来说并不算)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%90%8E%E9%9D%A2"><span class="toc-text">写在后面</span></a></li></ol></div><div class="widget-footer">
 
 <a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
 </div></aside><div class='float-panel blur'>
