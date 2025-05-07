@@ -17,26 +17,28 @@
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   
-  <title>希望你能带我走</title>
+  <title>FreeRTOS_01_简介和基础知识 - 希望你能带我走</title>
 
   
-    <meta name="description" content="1 RTOS 和 FreeRTOS的概念RTOS：实时操作系统（Real Time OS） 相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈 FreeRTOS：免费的嵌入式实时操作系统 特点：免费开源、可裁剪、简单移植性好、优先级不限、任务不限等 FreeRTOS学习路线：  基础知识：任务调度器，RTOS特性 FreeRTO">
+    <meta name="description" content="摘要：本文介绍了嵌入式操作系统FreeRTOS的概念和基本知识，关于任务调度。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="希望你能带我走">
+<meta property="og:title" content="FreeRTOS_01_简介和基础知识">
 <meta property="og:url" content="http://example.com/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="希望你能带我走">
-<meta property="og:description" content="1 RTOS 和 FreeRTOS的概念RTOS：实时操作系统（Real Time OS） 相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈 FreeRTOS：免费的嵌入式实时操作系统 特点：免费开源、可裁剪、简单移植性好、优先级不限、任务不限等 FreeRTOS学习路线：  基础知识：任务调度器，RTOS特性 FreeRTO">
+<meta property="og:description" content="摘要：本文介绍了嵌入式操作系统FreeRTOS的概念和基本知识，关于任务调度。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-20250508001229996.png">
-<meta property="article:published_time" content="2025-05-07T16:45:42.413Z">
-<meta property="article:modified_time" content="2025-05-07T16:43:23.328Z">
+<meta property="article:published_time" content="2025-05-07T16:47:00.000Z">
+<meta property="article:modified_time" content="2025-05-07T16:48:37.256Z">
 <meta property="article:author" content="kisekino yama">
+<meta property="article:tag" content="STM32">
+<meta property="article:tag" content="FreeRTOS">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-20250508001229996.png">
   
   
   
-  
+  <meta name="keywords" content="STM32,FreeRTOS">
 
   <!-- feed -->
   
@@ -65,7 +67,7 @@
 <div class="widgets">
 
 
-<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/"><span class="title">STM32-串口通讯/串口空闲中断/回调函数</span></a><a class="item title" href="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/"><span class="title">STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)</span></a><a class="item title" href="/2024/08/30/%E6%AC%A2%E8%BF%8E/"><span class="title">欢迎</span></a></div></widget>
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"><span class="title">FreeRTOS_01_简介和基础知识</span></a><a class="item title" href="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/"><span class="title">STM32-串口通讯/串口空闲中断/回调函数</span></a><a class="item title" href="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/"><span class="title">STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)</span></a><a class="item title" href="/2024/08/30/%E6%AC%A2%E8%BF%8E/"><span class="title">欢迎</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
@@ -77,11 +79,22 @@
 <div class="article banner top">
   <div class="content">
     <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
-<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div>
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-05-07T16:45:42.413Z">2025-05-08</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-05-07T16:43:23.328Z">2025-05-08</time></span></div></div></div>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/">技术学习</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/">嵌入式开发</a> <span class="sep"></span> <a class="cap breadcrumb-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/STM32/">STM32</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-05-07T16:47:00.000Z">2025-05-08</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-05-07T16:48:37.256Z">2025-05-08</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>FreeRTOS_01_简介和基础知识</span></h1>
+        
+      </div>
+    </div>
     
   </div>
-  </div><article class="md-text content"><h1 id="1-RTOS-和-FreeRTOS的概念"><a href="#1-RTOS-和-FreeRTOS的概念" class="headerlink" title="1 RTOS 和 FreeRTOS的概念"></a>1 RTOS 和 FreeRTOS的概念</h1><p>RTOS：实时操作系统（Real Time OS）</p>
+  </div><article class="md-text content"><p>摘要：本文介绍了嵌入式操作系统FreeRTOS的概念和基本知识，关于任务调度。</p>
+<span id="more"></span>
+
+<h1 id="1-RTOS-和-FreeRTOS的概念"><a href="#1-RTOS-和-FreeRTOS的概念" class="headerlink" title="1 RTOS 和 FreeRTOS的概念"></a>1 RTOS 和 FreeRTOS的概念</h1><p>RTOS：实时操作系统（Real Time OS）</p>
 <p>相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈</p>
 <p>FreeRTOS：免费的嵌入式实时操作系统</p>
 <p>特点：免费开源、可裁剪、简单移植性好、优先级不限、任务不限等</p>
