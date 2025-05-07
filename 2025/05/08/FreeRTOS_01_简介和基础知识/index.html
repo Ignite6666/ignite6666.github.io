@@ -20,13 +20,19 @@
   <title>希望你能带我走</title>
 
   
-    <meta property="og:type" content="website">
+    <meta name="description" content="1 RTOS 和 FreeRTOS的概念RTOS：实时操作系统（Real Time OS） 相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈 FreeRTOS：免费的嵌入式实时操作系统 特点：免费开源、可裁剪、简单移植性好、优先级不限、任务不限等 FreeRTOS学习路线：  基础知识：任务调度器，RTOS特性 FreeRTO">
+<meta property="og:type" content="article">
 <meta property="og:title" content="希望你能带我走">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="希望你能带我走">
+<meta property="og:description" content="1 RTOS 和 FreeRTOS的概念RTOS：实时操作系统（Real Time OS） 相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈 FreeRTOS：免费的嵌入式实时操作系统 特点：免费开源、可裁剪、简单移植性好、优先级不限、任务不限等 FreeRTOS学习路线：  基础知识：任务调度器，RTOS特性 FreeRTO">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-20250508001229996.png">
+<meta property="article:published_time" content="2025-05-07T16:45:42.413Z">
+<meta property="article:modified_time" content="2025-05-07T16:43:23.328Z">
 <meta property="article:author" content="kisekino yama">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-20250508001229996.png">
   
   
   
@@ -45,7 +51,7 @@
 </head>
 <body>
 
-<div class="l_body s:aa index tech" id="start" layout="undefined" ><aside class="l_left"><div class="leftbar-container">
+<div class="l_body s:aa content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
 
 
 <header class="header"><div class="logo-wrap"><a class="avatar" href="/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/icon_tomorin.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">kisekino yama</div><div class="sub cap">博客施工中...</div></a></div></header>
@@ -57,30 +63,70 @@
 <nav class="menu dis-select"></nav>
 </div>
 <div class="widgets">
+
+
 <widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/"><span class="title">STM32-串口通讯/串口空闲中断/回调函数</span></a><a class="item title" href="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/"><span class="title">STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)</span></a><a class="item title" href="/2024/08/30/%E6%AC%A2%E8%BF%8E/"><span class="title">欢迎</span></a></div></widget>
 </div>
 
 </div></aside><div class="l_main" id="main">
 
-<header class="header mobile-only"><div class="logo-wrap"><a class="avatar" href="/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="/images/icon_tomorin.png" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">kisekino yama</div><div class="sub cap">博客施工中...</div></a></div></header>
 
 
 
 
-<div class="navbar top"><nav class="post"><a class="active" href="/">近期发布</a><a href="/categories">分类</a><a href="/tags">标签</a><a href="/archives">归档</a></nav></div>
-<div class="post-list post"><a class="post-card post" href="/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
-<article class="md-text"><h2 class="post-title">2025-05-08</h2><div class="excerpt"><p>1 RTOS 和 FreeRTOS的概念RTOS：实时操作系统（Real Time OS）
-相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈
-FreeRTOS：免费的嵌入式实时操...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><time datetime="2025-05-07T16:45:42.413Z">2025-05-08</time></span></div></article>
-</a><a class="post-card post" href="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/">
-<article class="md-text"><h2 class="post-title">STM32-串口通讯/串口空闲中断/回调函数</h2><div class="excerpt"><p>摘要：本文介绍了STM32芯片串口通信的功能和时序原理，基于HAL库的编码过程，如何使用回调函数，以及为了处理不定长数据如何使用串口空闲中断。</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><time datetime="2024-12-11T18:01:56.000Z">2024-12-12</time></span></div></article>
-</a><a class="post-card post" href="/2024/09/01/STM32-GPIO%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%85%B6%E5%8E%9F%E7%90%86(%E5%9F%BA%E4%BA%8EHAL%E5%BA%93%E5%92%8CCubeMX)/">
-<article class="md-text"><h2 class="post-title">STM32-GPIO功能及其原理(基于HAL库和STM32CubeMX)</h2><div class="excerpt"><p>摘要：本文介绍了STM32芯片GPIO的功能和原理，HAL库 GPIO函数，以及CubeMX工具的使用；</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><time datetime="2024-09-01T08:25:51.000Z">2024-09-01</time></span><span class="cap breadcrumb"><svg style="margin-bottom:1px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77c.079.07.154.145.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14z" opacity=".5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg><span>技术学习</span></span></div></article>
-</a><a class="post-card post" href="/2024/08/30/%E6%AC%A2%E8%BF%8E/">
-<article class="md-text"><h2 class="post-title">欢迎</h2><div class="excerpt"><p>你好！在大学毕业一年后，我尝试搭建了自己的博客。
-之前就觉得前端很复杂，计算机网络学的也很差，目前还不是很会操作博客，只能通过git bash来创建文章，然后编写markdown文档，然后再用hexo指令更新。
-笔者很懒，也很摆烂，摆烂了四五年，不管...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg style="margin-bottom:2px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972c.697-.67 1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"/><path fill="currentColor" d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828C4.343 22 6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172C22 19.658 22 17.772 22 14" opacity=".5"/><path fill="currentColor" d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"/></svg><time datetime="2024-08-29T17:08:34.000Z">2024-08-30</time></span><span class="cap breadcrumb"><svg style="margin-bottom:1px" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6.95c0-.883 0-1.324.07-1.692A4 4 0 0 1 5.257 2.07C5.626 2 6.068 2 6.95 2c.386 0 .58 0 .766.017a4 4 0 0 1 2.18.904c.144.119.28.255.554.529L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .848.352C14.098 6 14.675 6 15.828 6h.374c2.632 0 3.949 0 4.804.77c.079.07.154.145.224.224c.77.855.77 2.172.77 4.804V14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14z" opacity=".5"/><path fill="currentColor" d="M20 6.238c0-.298-.005-.475-.025-.63a3 3 0 0 0-2.583-2.582C17.197 3 16.965 3 16.5 3H9.988c.116.104.247.234.462.45L11 4c.816.816 1.224 1.224 1.712 1.495a4 4 0 0 0 .849.352C14.098 6 14.675 6 15.829 6h.373c1.78 0 2.957 0 3.798.238"/><path fill="currentColor" fill-rule="evenodd" d="M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75" clip-rule="evenodd"/></svg><span>随笔</span></span></div></article>
-</a></div>
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-05-07T16:45:42.413Z">2025-05-08</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-05-07T16:43:23.328Z">2025-05-08</time></span></div></div></div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="1-RTOS-和-FreeRTOS的概念"><a href="#1-RTOS-和-FreeRTOS的概念" class="headerlink" title="1 RTOS 和 FreeRTOS的概念"></a>1 RTOS 和 FreeRTOS的概念</h1><p>RTOS：实时操作系统（Real Time OS）</p>
+<p>相对裸机的特点：功能划分(多个任务)、延时函数(调用时会让出CPU给别的任务)、抢占式（高优先级抢占低优先级）、任务堆栈</p>
+<p>FreeRTOS：免费的嵌入式实时操作系统</p>
+<p>特点：免费开源、可裁剪、简单移植性好、优先级不限、任务不限等</p>
+<p>FreeRTOS学习路线：</p>
+<ol>
+<li>基础知识：任务调度器，RTOS特性</li>
+<li>FreeRTOS内核：任务启动流程、中断管理、任务切换</li>
+<li>FreeRTOS个功能：列表、队列、信号量、内存管理等</li>
+</ol>
+<h1 id="2-FreeRTOS基础知识"><a href="#2-FreeRTOS基础知识" class="headerlink" title="2 FreeRTOS基础知识"></a>2 FreeRTOS基础知识</h1><h2 id="2-1-任务调度简介"><a href="#2-1-任务调度简介" class="headerlink" title="2.1 任务调度简介"></a>2.1 任务调度简介</h2><p>概念：调度器使用调度算法决定当前需要执行哪个任务</p>
+<p>调度方式：</p>
+<ol>
+<li>抢占式调度：优先级高的任务抢占优先级低的任务</li>
+<li>时间片调度：针对优先级相同的任务，在每一次系统时钟节拍到时切换任务</li>
+<li>协程式调度：当前任务一直执行，高优先级不会抢占</li>
+</ol>
+<h3 id="2-1-1-抢占式调度"><a href="#2-1-1-抢占式调度" class="headerlink" title="2.1.1 抢占式调度"></a>2.1.1 抢占式调度</h3><ol>
+<li>高优先级任务优先执行，高优先级任务停止后低优先级任务才会执行</li>
+<li>被抢占CPU的任务会进入就绪态</li>
+<li>高优先级的任务进入阻塞态后，其他就绪态的任务可以执行</li>
+</ol>
+<blockquote>
+<p>P.S. 进程的三态、五态、七态模型</p>
+</blockquote>
+<h3 id="2-1-2-时间片调度"><a href="#2-1-2-时间片调度" class="headerlink" title="2.1.2 时间片调度"></a>2.1.2 时间片调度</h3><p><strong>同等优先级任务</strong>轮流享有相同的CPU时间（时间片，可设置），FreeRTOS中，一个时间片等于sysTick中断周期</p>
+<p>运行过程中进入阻塞态后，直接切换至下一个任务</p>
+<h2 id="2-2-任务状态"><a href="#2-2-任务状态" class="headerlink" title="2.2 任务状态"></a>2.2 任务状态</h2><p>运行态：正在执行的任务，STM32中同一时间仅有一个任务在运行态</p>
+<p>就绪态：能够执行但是还未被执行的任务</p>
+<p>阻塞态：因为延时或者等待外部事件发生，无法立刻执行</p>
+<p>挂起态：类似暂停，调用函数进入挂起态，调用解挂函数才能进入就绪态</p>
+<p>转换图：</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/2025/05/08/FreeRTOS_01_%E7%AE%80%E4%BB%8B%E5%92%8C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-20250508001229996.png" alt="image-20250508001229996"></p>
+<p>除了运行态，其他三种状态都有对应的<strong>任务状态列表</strong></p>
+<p>就绪列表：<code>pxReadyTaskList[x]</code>，x代表优先级数值</p>
+<p>阻塞列表：<code>pxDelayedTaskList</code></p>
+<p>挂起列表：<code>xSuspendTaskList</code></p>
+<p><strong>调度器总是在所有处于就绪列表的任务中，选择最高优先级的任务执行</strong></p>
+
+
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2024/12/12/STM32-%E4%B8%B2%E5%8F%A3%E9%80%9A%E8%AE%AF-%E4%B8%B2%E5%8F%A3%E7%A9%BA%E9%97%B2%E4%B8%AD%E6%96%AD-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/">STM32-串口通讯/串口空闲中断/回调函数</a></div></section></div>
+
+
+
+
 
 
 <footer class="page-footer footnote"><hr><div class="text"><p>
@@ -113,7 +159,14 @@ show_runtime();
 </p>
 </div></footer>
 <div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
-</aside><div class='float-panel blur'>
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-RTOS-%E5%92%8C-FreeRTOS%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-text">1 RTOS 和 FreeRTOS的概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-FreeRTOS%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-text">2 FreeRTOS基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E7%AE%80%E4%BB%8B"><span class="toc-text">2.1 任务调度简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-%E6%8A%A2%E5%8D%A0%E5%BC%8F%E8%B0%83%E5%BA%A6"><span class="toc-text">2.1.1 抢占式调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2-%E6%97%B6%E9%97%B4%E7%89%87%E8%B0%83%E5%BA%A6"><span class="toc-text">2.1.2 时间片调度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E4%BB%BB%E5%8A%A1%E7%8A%B6%E6%80%81"><span class="toc-text">2.2 任务状态</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
   <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
   </button>
