@@ -1,0 +1,1 @@
+import{as as t,m as o,l as n,H as r}from"./index-bBdMEzko.js";const s={};function a(c,e){return n(),o("div",null,e[0]||(e[0]=[r("p",null,"About",-1)]))}const u=t(s,[["render",a]]);export{u as default};
